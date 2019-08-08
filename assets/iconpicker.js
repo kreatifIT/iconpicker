@@ -7,7 +7,11 @@ $(document).on('ready pjax:success mblock:add', function () {
                 if ($this.hasClass('icp-group') && !$this.next().hasClass('input-group-addon')) {
                     $this.wrap('<div class="input-group"/>').after('<span class="input-group-addon"/>');
                 }
-                $this.iconpicker();
+                $this.prop('readonly', 'readonly');
+                $this.iconpicker({
+                    icons: iconpicker.icons,
+                    placement: 'top'
+                });
             }
         });
     }, 500);
