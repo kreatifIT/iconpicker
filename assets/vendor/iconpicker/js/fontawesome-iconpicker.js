@@ -443,9 +443,10 @@
         searchInFooter: false,
         mustAccept: false,
         selectedCustomClass: "bg-primary",
-        icons: [],
-        fullClassFormatter: function(a) {
-            return "fa " + a;
+        iconset: [],
+        fullClassFormatter: function(a, _this) {
+            var iconset = _this.data('iconset') || {};
+            return (iconset.prefix || 'fa') +' '+ a;
         },
         input: "input,.iconpicker-input",
         inputSearch: false,
@@ -533,11 +534,15 @@
                 c.preventDefault();
                 return false;
             };
-            for (var d in this.options.icons) {
-                var e = a(this.options.templates.iconpickerItem);
-                e.find("i").addClass(this.options.fullClassFormatter(this.options.icons[d]));
-                e.data("iconpickerValue", this.options.icons[d]).on("click.iconpicker", c);
-                this.iconpicker.find(".iconpicker-items").append(e.attr("title", "." + this.options.icons[d]));
+            for (var ds in this.options.iconset) {
+                for (var d in this.options.iconset[ds].icons) {
+                    var e = a(this.options.templates.iconpickerItem);
+
+                    e.data("iconset", this.options.iconset[ds]);
+                    e.data("iconpickerValue", this.options.iconset[ds].icons[d]).on("click.iconpicker", c);
+                    e.find("i").addClass(this.options.fullClassFormatter(this.options.iconset[ds].icons[d], e));
+                    this.iconpicker.find(".iconpicker-items").append(e.attr("title", "." + this.options.iconset[ds].icons[d]));
+                }
             }
             this.popover.find(".popover-content").append(this.iconpicker);
             return this.iconpicker;
@@ -791,12 +796,12 @@
         _updateComponents: function() {
             this.iconpicker.find(".iconpicker-item.iconpicker-selected").removeClass("iconpicker-selected " + this.options.selectedCustomClass);
             if (this.iconpickerValue) {
-                this.iconpicker.find("." + this.options.fullClassFormatter(this.iconpickerValue).replace(/ /g, ".")).parent().addClass("iconpicker-selected " + this.options.selectedCustomClass);
+                this.iconpicker.find("." + this.options.fullClassFormatter(this.iconpickerValue, this.element).replace(/ /g, ".")).parent().addClass("iconpicker-selected " + this.options.selectedCustomClass);
             }
             if (this.hasComponent()) {
                 var a = this.component.find("i");
                 if (a.length > 0) {
-                    a.attr("class", this.options.fullClassFormatter(this.iconpickerValue));
+                    a.attr("class", this.options.fullClassFormatter(this.iconpickerValue, this.element));
                 } else {
                     this.component.html(this.getHtml());
                 }
@@ -819,8 +824,10 @@
             }
             var d = c === "";
             c = a.trim(c);
-            if (b.inArray(c, this.options.icons) || d) {
-                return c;
+            for (var i in this.options.iconset) {
+                if (b.inArray(c, this.options.iconset[i].icons) || d) {
+                    return c;
+                }
             }
             return false;
         },
@@ -840,7 +847,16 @@
             }
         },
         getHtml: function() {
-            return '<i class="' + this.options.fullClassFormatter(this.iconpickerValue) + '"></i>';
+            loop1:
+            for (var i in this.options.iconset) {
+                for (var d in this.options.iconset[i].icons) {
+                    if (this.options.iconset[i].icons[d] == this.iconpickerValue) {
+                        this.element.data('iconset', this.options.iconset[i]);
+                        break loop1;
+                    }
+                }
+            }
+            return '<i class="' + this.options.fullClassFormatter(this.iconpickerValue, this.element) + '"></i>';
         },
         setSourceValue: function(a) {
             a = this.setValue(a);
@@ -1013,5 +1029,4 @@
             }
         });
     };
-    c.defaultOptions.icons = [];
 });

@@ -1,8 +1,17 @@
 <?php
 
 if (rex::isBackend()) {
+    $compile   = $this->getProperty('compile');
     $font_path = $this->getAssetsPath('fonts');
     $fonts     = glob($font_path . '/*/');
+
+    if ($compile) {
+        rex_file::copy(__DIR__ .'/assets/iconpicker.js', $this->getAssetsPath('iconpicker.js'));
+        rex_file::copy(__DIR__ .'/assets/iconpicker.css', $this->getAssetsPath('iconpicker.css'));
+        rex_file::copy(__DIR__ .'/assets/fonts/fontawesome/config.js', $this->getAssetsPath('fonts/fontawesome/config.js'));
+        rex_file::copy(__DIR__ .'/assets/vendor/iconpicker/css/fontawesome-iconpicker.css', $this->getAssetsPath('vendor/iconpicker/css/fontawesome-iconpicker.css'));
+        rex_file::copy(__DIR__ .'/assets/vendor/iconpicker/js/fontawesome-iconpicker.js', $this->getAssetsPath('vendor/iconpicker/js/fontawesome-iconpicker.js'));
+    }
 
     foreach ($fonts as $font_folder) {
         if (file_exists($font_folder . 'config.js')) {

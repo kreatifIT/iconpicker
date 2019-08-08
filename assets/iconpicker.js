@@ -1,5 +1,7 @@
 $(document).on('ready pjax:success mblock:add', function () {
-    window.setTimeout(function() {
+    window.setTimeout(function () {
+        console.debug(iconpicker);
+
         $('.icp').each(function () {
             var $this = $(this);
 
@@ -8,10 +10,9 @@ $(document).on('ready pjax:success mblock:add', function () {
                     $this.wrap('<div class="input-group"/>').after('<span class="input-group-addon"/>');
                 }
                 $this.prop('readonly', 'readonly');
-                $this.iconpicker({
-                    icons: iconpicker.icons,
+                $this.iconpicker($.extend(iconpicker, {
                     placement: 'top'
-                });
+                }));
             }
         });
     }, 500);
