@@ -445,8 +445,10 @@
         selectedCustomClass: "bg-primary",
         iconset: [],
         fullClassFormatter: function(a, _this) {
-            var iconset = _this.data('iconset') || {};
-            return (iconset.prefix || 'fa') +' '+ a;
+            var iconset = _this.data('iconset') || {},
+                prefix = iconset.prefix || '',
+                value = prefix +' '+ a;
+            return value.trim();
         },
         input: "input,.iconpicker-input",
         inputSearch: false,
@@ -825,8 +827,12 @@
             var d = c === "";
             c = a.trim(c);
             for (var i in this.options.iconset) {
-                if (b.inArray(c, this.options.iconset[i].icons) || d) {
-                    return c;
+                var chunks = c.split(' '),
+                    value = chunks[1] || chunks[0];
+                if (b.inArray(value, this.options.iconset[i].icons) || d) {
+                    var prefix = this.options.iconset[i].prefix || '',
+                        value = prefix +' '+ value;
+                    return value.trim();
                 }
             }
             return false;
