@@ -1,7 +1,5 @@
-$(document).on('ready pjax:success mblock:add', function () {
+$(document).on('rex:ready ready pjax:success mblock:add', function () {
     window.setTimeout(function () {
-        console.debug(iconpicker);
-
         $('.icp').each(function () {
             var $this = $(this);
 
