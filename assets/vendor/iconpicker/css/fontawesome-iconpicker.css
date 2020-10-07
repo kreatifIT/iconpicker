@@ -325,3 +325,14 @@
 .iconpicker-component {
   cursor: pointer;
 }
+
+/* custom */
+.iconpicker-container {
+  position: relative;
+}
+
+.iconpicker-container .icp-close {
+  position: absolute;
+  top: 7px;
+  right: 12px;
+}

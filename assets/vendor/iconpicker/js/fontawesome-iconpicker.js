@@ -400,6 +400,7 @@
             }
         }
         this.container.addClass("iconpicker-container");
+        this.container.append('<span class="icp-close"><i class="fal fa-times"></i></span>');
         if (this.isDropdownMenu()) {
             this.options.templates.search = false;
             this.options.templates.buttons = false;
@@ -566,6 +567,9 @@
             var c = this;
             this.getSearchInput().on("keyup.iconpicker", function() {
                 c.filter(a(this).val().toLowerCase());
+            });
+            this.getClearButton().on("click", function(){
+                c.clearInput(this.previousSibling);
             });
             this.getAcceptButton().on("click.iconpicker", function() {
                 var a = c.iconpicker.find(".iconpicker-selected").get(0);
@@ -819,8 +823,8 @@
             if (this.hasInput()) {
                 if (a !== false) {
                     this.input.parents(".form-group:first").removeClass("has-error");
-                } else {
-                    this.input.parents(".form-group:first").addClass("has-error");
+                // } else {
+                    // this.input.parents(".form-group:first").addClass("has-error");
                 }
                 return true;
             }
@@ -871,6 +875,7 @@
             return '<i class="' + this.options.fullClassFormatter(this.iconpickerValue, this.element) + '"></i>';
         },
         setSourceValue: function(a) {
+            if (a.length > 3) {
             a = this.setValue(a);
             if (a !== false && a !== "") {
                 if (this.hasInput()) {
@@ -883,6 +888,9 @@
                 });
             }
             return a;
+            } else {
+                this.clearInput(this.input[0]);
+            }
         },
         getSourceValue: function(a) {
             a = a || this.options.defaultValue;
@@ -926,6 +934,12 @@
         },
         getSearchInput: function() {
             return this.popover.find(".iconpicker-search");
+        },
+        getClearButton: function() {
+            return this.container.find('.icp-close');
+        },
+        clearInput: function(input) {
+            input.value = ''
         },
         filter: function(c) {
             if (b.isEmpty(c)) {
@@ -971,6 +985,9 @@
             }
             this._trigger("iconpickerHide");
             this.popover.removeClass("in");
+            if (this.input[0].value.length < 4) {
+                this.clearInput(this.input[0]);
+            }
             setTimeout(a.proxy(function() {
                 this.popover.css("display", "none");
                 this.getSearchInput().val("");
